@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Mapa - Plataforma de Riesgo de Inundación Parroquial Costera{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="rip-map-shell">
+
+    <header class="rip-map-top">
+        <div class="rip-map-top-inner">
+            <h1>Plataforma de Riesgo de Inundación Parroquial Costera</h1>
+            <p>Visualización cartográfica basada en modelos predictivos de Machine Learning</p>
+        </div>
+    </header>
+
+    <main class="rip-map-main">
+        <div id="map" class="rip-map-canvas"></div>
+    </main>
+
+    <footer class="rip-map-footer">
+        <div class="rip-map-footer-grid">
+
+            <div class="rip-footer-col">
+                <h3>PLATAFORMA RIP</h3>
+                <p><strong>Clasificación del Riesgo de Inundación por Parroquia en Zonas Costeras del Ecuador</strong></p>
+                <p><strong>Desarrollado para:</strong></p>
+                <p>Universidad de Guayaquil</p>
+                <p>Facultad de Ciencias Matemáticas y Físicas</p>
+                <p>Ciencia de Datos e Inteligencia Artificial</p>
+                <p>Materia: Aprendizaje Automático</p>
+            </div>
+
+            <div class="rip-footer-col">
+                <h3>EQUIPO DE DESARROLLO</h3>
+                <p><strong>Arroyo Chuquín Jorge Santiago</strong>: Data Research Analyst</p>
+                <p><strong>Pincay Chilan Daniela Alexandra</strong>: Data Engineer</p>
+                <p><strong>Álvarez Aguayo Miguel Alejandro</strong>: Feature Engineer</p>
+                <p><strong>Navarrete Ronquillo Jesús Alonso</strong>: Data Analyst</p>
+                <p><strong>Benalcázar Solórzano Ricardo Axel</strong>: Machine Learning Engineer</p>
+                <p><strong>Guadamud Yépez Limber Manuel</strong>: MLOps & Frontend / Deployment Engineer</p>
+            </div>
+
+            <div class="rip-footer-col">
+                <h3>FUENTES DE INFORMACIÓN (.CSV)</h3>
+                <ul>
+                    <li>Precipitación histórica parroquial</li>
+                    <li>Altitud y pendiente parroquial costera</li>
+                    <li>Distancia a ríos parroquiales</li>
+                    <li>Densidad poblacional parroquial</li>
+                    <li>Uso de suelo parroquial</li>
+                    <li>Eventos históricos de inundación</li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+</section>
+
+<script src="{{ url_for('static', filename='js/mapa.js') }}"></script>
+{% endblock %}

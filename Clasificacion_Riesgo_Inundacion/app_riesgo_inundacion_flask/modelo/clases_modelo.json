@@ -1,0 +1,17 @@
+{
+    "codificacion": {
+        "Bajo": 0,
+        "Medio": 1,
+        "Alto": 2
+    },
+    "decodificacion": {
+        "0": "Bajo",
+        "1": "Medio",
+        "2": "Alto"
+    },
+    "orden_probabilidades": [
+        "Bajo",
+        "Medio",
+        "Alto"
+    ]
+}

@@ -1,0 +1,57 @@
+{
+    "modelo_seleccionado": "Random Forest optimizado",
+    "criterio_seleccion": "F1_macro, Recall_Alto y AUC_ROC_macro",
+    "metricas_conjunto_prueba": {
+        "Modelo": "Random Forest optimizado",
+        "Accuracy": 0.64,
+        "Balanced_accuracy": 0.6065,
+        "Precision_macro": 0.5887,
+        "Recall_macro": 0.6065,
+        "F1_macro": 0.5955,
+        "F1_weighted": 0.6431,
+        "Recall_Alto": 0.6667,
+        "AUC_ROC_macro": 0.8155,
+        "AUC_ROC_ponderada": 0.8223,
+        "Tiempo_entrenamiento_seg": 0.7282
+    },
+    "auc_por_clase": {
+        "Bajo": 0.8529,
+        "Medio": 0.7002,
+        "Alto": 0.8933
+    },
+    "numero_parroquias_total": 300,
+    "numero_registros_train": 225,
+    "numero_registros_test": 75,
+    "numero_variables_predictoras": 17,
+    "variables_predictoras": [
+        "precipitacion_media_anual",
+        "precipitacion_maxima_anual",
+        "precipitacion_minima_anual",
+        "altitud_media",
+        "rango_altitudinal",
+        "pendiente_media",
+        "distancia_minima_rio_km",
+        "distancia_centroide_rio_km",
+        "porcentaje_area_cerca_rio_1km",
+        "num_elementos_hidricos_intersectan",
+        "densidad_poblacional_hab_km2",
+        "porcentaje_area_urbanizada",
+        "porcentaje_bosque",
+        "porcentaje_agricultura_pasto",
+        "porcentaje_agua",
+        "porcentaje_acuicultura",
+        "porcentaje_mineria"
+    ],
+    "columnas_excluidas_por_fuga": [
+        "eventos_inundacion",
+        "conteo_inundaciones",
+        "numero_eventos",
+        "indice_historico",
+        "indice_riesgo"
+    ],
+    "tiempo_reentrenamiento_final_segundos": 0.6131,
+    "version_python": "3.12.13",
+    "version_scikit_learn": "1.6.1",
+    "version_pandas": "2.2.2",
+    "version_numpy": "2.0.2"
+}

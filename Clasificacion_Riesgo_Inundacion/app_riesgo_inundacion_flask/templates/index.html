@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Inicio | Riesgo de Inundación{% endblock %}
+
+{% block content %}
+<section class="grid cards">
+    <article class="card">
+        <h2>Total de parroquias</h2>
+        <p class="metric">{{ total_registros }}</p>
+    </article>
+    <article class="card">
+        <h2>Provincias</h2>
+        <p class="metric">{{ total_provincias }}</p>
+    </article>
+    <article class="card">
+        <h2>Resultados filtrados</h2>
+        <p class="metric">{{ total_filtrado }}</p>
+    </article>
+    <article class="card wide">
+        <h2>Fuente de predicción</h2>
+        <p>{{ modelo_info.mensaje }}</p>
+    </article>
+</section>
+
+<section class="card highlight">
+    <h2>Alcance del dataset actualizado</h2>
+    <p>La aplicación usa el resultado actualizado del Colab con 6 provincias: El Oro, Esmeraldas, Guayas, Los Ríos, Manabí y Santa Elena.</p>
+</section>
+
+<section class="card">
+    <h2>Resumen por nivel de riesgo predicho</h2>
+    {% if resumen %}
+    <div class="risk-summary">
+        {% for riesgo, cantidad in resumen.items() %}
+        <div class="risk-pill riesgo-{{ riesgo|lower|replace(' ', '-') }}">
+            <strong>{{ riesgo }}</strong><span>{{ cantidad }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No se encontró una columna de predicción en el archivo CSV.</p>
+    {% endif %}
+</section>
+
+{% if metricas_test %}
+<section class="grid cards">
+    <article class="card">
+        <h2>Modelo seleccionado</h2>
+        <p class="model-name">{{ metricas.get('modelo_seleccionado', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>Accuracy</h2>
+        <p class="metric small">{{ metricas_test.get('Accuracy', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>F1 macro</h2>
+        <p class="metric small">{{ metricas_test.get('F1_macro', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>AUC ROC macro</h2>
+        <p class="metric small">{{ metricas_test.get('AUC_ROC_macro', 'Sin dato') }}</p>
+    </article>
+</section>
+{% endif %}
+
+<section class="card">
+    <h2>Filtros de consulta</h2>
+    <form class="filters" method="get" action="{{ url_for('index') }}">
+        <label>
+            Provincia
+            <select name="provincia">
+                <option value="">Todas</option>
+                {% for provincia in provincias %}
+                <option value="{{ provincia }}" {% if provincia == provincia_sel %}selected{% endif %}>{{ provincia }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Cantón
+            <select name="canton">
+                <option value="">Todos</option>
+                {% for canton in cantones %}
+                <option value="{{ canton }}" {% if canton == canton_sel %}selected{% endif %}>{{ canton }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Buscar texto, código o riesgo
+            <input type="text" name="q" value="{{ texto }}" placeholder="Ej.: Santa Elena, Salinas, 240150, Alto">
+        </label>
+        <button type="submit">Filtrar</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Predicciones finales</h2>
+    {% if tabla %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    {% for col in columnas_tabla %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in tabla %}
+                <tr>
+                    {% for col in columnas_tabla %}
+                    <td>{{ fila[col] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="note">Se muestran máximo 120 registros. Para obtener todos los datos usa la API de predicciones.</p>
+    {% else %}
+    <p>No existen registros para mostrar. Verifica el archivo <code>data/predicciones_finales.csv</code>.</p>
+    {% endif %}
+</section>
+
+{% if importancia %}
+<section class="card">
+    <h2>Variables más importantes del modelo</h2>
+    <div class="table-wrapper compact">
+        <table>
+            <thead><tr><th>Variable</th><th>Importancia</th></tr></thead>
+            <tbody>
+                {% for fila in importancia %}
+                <tr><td>{{ fila.variable }}</td><td>{{ '%.4f'|format(fila.importancia) }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Consultar parroquia | Riesgo de Inundación{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Consulta de riesgo por parroquia</h2>
+    <p>Ingrese el código parroquial, provincia, cantón, parroquia o nivel de riesgo para consultar la predicción.</p>
+    <form class="search-form" method="post" action="{{ url_for('prediccion') }}">
+        <input type="text" name="consulta" value="{{ consulta }}" placeholder="Ej.: Santa Elena, La Libertad, Salinas, 240150" required>
+        <button type="submit">Consultar</button>
+    </form>
+</section>
+
+{% if consulta and not resultado %}
+<section class="card warning">
+    <h2>Sin resultados</h2>
+    <p>No se encontraron parroquias que coincidan con: <strong>{{ consulta }}</strong>.</p>
+</section>
+{% endif %}
+
+{% if resultado %}
+<section class="card result-card">
+    <h2>Resultado principal</h2>
+    <div class="result-grid">
+        <div>
+            <span class="label">Código parroquial</span>
+            <strong>{{ resultado.get('codigo_parroquia', 'Sin dato') }}</strong>
+        </div>
+        <div>
+            <span class="label">Provincia</span>
+            <strong>{{ resultado.get('provincia', 'Sin dato') }}</strong>
+        </div>
+        <div>
+            <span class="label">Cantón</span>
+            <strong>{{ resultado.get('canton', 'Sin dato') }}</strong>
+        </div>
+        <div>
+            <span class="label">Parroquia</span>
+            <strong>{{ resultado.get('parroquia', 'Sin dato') }}</strong>
+        </div>
+        <div>
+            <span class="label">Riesgo histórico real</span>
+            <strong>{{ resultado.get('riesgo_real', 'Sin dato') }}</strong>
+        </div>
+        <div class="risk-result riesgo-{{ resultado.get('riesgo_predicho', 'sin-dato')|lower|replace(' ', '-') }}">
+            <span class="label">Nivel de riesgo predicho</span>
+            <strong>{{ resultado.get('riesgo_predicho', 'Sin dato') }}</strong>
+        </div>
+    </div>
+</section>
+
+<section class="grid cards">
+    <article class="card">
+        <h2>Prob. bajo</h2>
+        <p class="metric small">{{ resultado.get('probabilidad_bajo', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>Prob. medio</h2>
+        <p class="metric small">{{ resultado.get('probabilidad_medio', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>Prob. alto</h2>
+        <p class="metric small">{{ resultado.get('probabilidad_alto', 'Sin dato') }}</p>
+    </article>
+    <article class="card">
+        <h2>Confianza</h2>
+        <p class="metric small">{{ resultado.get('confianza_prediccion', 'Sin dato') }}</p>
+    </article>
+</section>
+
+<section class="card">
+    <h2>Variables predictoras disponibles</h2>
+    {% if columnas.predictoras %}
+    <div class="table-wrapper compact">
+        <table>
+            <thead><tr><th>Variable</th><th>Valor</th></tr></thead>
+            <tbody>
+                {% for col in columnas.predictoras %}
+                <tr>
+                    <td>{{ col }}</td>
+                    <td>{{ resultado.get(col, 'Sin dato') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>El CSV actual no contiene variables predictoras.</p>
+    {% endif %}
+</section>
+{% endif %}
+
+{% if resultados|length > 1 %}
+<section class="card">
+    <h2>Otros resultados encontrados</h2>
+    <ul class="result-list">
+        {% for fila in resultados[1:] %}
+        <li>
+            <strong>{{ fila.get('parroquia', 'Sin parroquia') }}</strong>,
+            {{ fila.get('canton', 'Sin cantón') }}, {{ fila.get('provincia', 'Sin provincia') }} —
+            Riesgo predicho: {{ fila.get('riesgo_predicho', 'Sin dato') }}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}
