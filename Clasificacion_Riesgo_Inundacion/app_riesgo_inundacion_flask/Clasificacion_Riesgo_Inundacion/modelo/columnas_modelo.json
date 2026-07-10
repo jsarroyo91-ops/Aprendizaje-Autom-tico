@@ -1,0 +1,19 @@
+[
+    "precipitacion_media_anual",
+    "precipitacion_maxima_anual",
+    "precipitacion_minima_anual",
+    "altitud_media",
+    "rango_altitudinal",
+    "pendiente_media",
+    "distancia_minima_rio_km",
+    "distancia_centroide_rio_km",
+    "porcentaje_area_cerca_rio_1km",
+    "num_elementos_hidricos_intersectan",
+    "densidad_poblacional_hab_km2",
+    "porcentaje_area_urbanizada",
+    "porcentaje_bosque",
+    "porcentaje_agricultura_pasto",
+    "porcentaje_agua",
+    "porcentaje_acuicultura",
+    "porcentaje_mineria"
+]

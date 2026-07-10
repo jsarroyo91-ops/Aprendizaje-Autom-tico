@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Riesgo de Inundación{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1>Clasificación Supervisada de Riesgo de Inundación</h1>
+            <p>Modelo por parroquia costera de Ecuador</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('prediccion') }}">Consultar parroquia</a>
+        <a href="{{ url_for('mapa') }}">Mapa</a>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>Proyecto académico | Clasificación supervisada de riesgo de inundación por parroquia.</p>
+    </footer>
+</body>
+</html>

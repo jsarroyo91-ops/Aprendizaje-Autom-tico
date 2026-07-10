@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Mapa - Plataforma de Riesgo de Inundación Parroquial Costera{% endblock %}
+{% block title %}Mapa - Plataforma de Riesgo de Inundación Parroquial Costera<script src="{{ url_for('static', filename='js/mapa_click_panel.js') }}?v=20260711"></script>
+{% endblock %}
 
-{% block content %}
-
+{% block head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/mapa_click_panel.js') }}?v=20260711"></script>
+{% endblock %}
 
+{% block content %}
 <section class="rip-map-shell">
 
     <header class="rip-map-top">
@@ -60,6 +63,6 @@
 
 </section>
 
-<script src="{{ url_for('static', filename='js/mapa.js') }}?v=20260712"></script>
 
+<script src="{{ url_for('static', filename='js/mapa_click_panel.js') }}?v=20260711"></script>
 {% endblock %}

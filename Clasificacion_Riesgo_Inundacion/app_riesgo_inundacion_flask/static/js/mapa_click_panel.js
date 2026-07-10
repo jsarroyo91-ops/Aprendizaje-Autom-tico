@@ -1,7 +1,5 @@
 function limpiarTexto(valor) {
-    if (valor === null || valor === undefined) {
-        return '';
-    }
+    if (valor === null || valor === undefined) return '';
 
     const texto = String(valor).trim();
 
@@ -35,17 +33,9 @@ function formatoPorcentaje(valor) {
 function colorPorRiesgo(riesgo) {
     const valor = limpiarTexto(riesgo).toLowerCase();
 
-    if (valor.includes('alto')) {
-        return '#ef4444';
-    }
-
-    if (valor.includes('medio')) {
-        return '#f97316';
-    }
-
-    if (valor.includes('bajo')) {
-        return '#22c55e';
-    }
+    if (valor.includes('alto')) return '#ef4444';
+    if (valor.includes('medio')) return '#f97316';
+    if (valor.includes('bajo')) return '#22c55e';
 
     return '#9ca3af';
 }
@@ -53,17 +43,9 @@ function colorPorRiesgo(riesgo) {
 function claseBadgeRiesgo(riesgo) {
     const valor = limpiarTexto(riesgo).toLowerCase();
 
-    if (valor.includes('alto')) {
-        return 'badge-riesgo badge-alto';
-    }
-
-    if (valor.includes('medio')) {
-        return 'badge-riesgo badge-medio';
-    }
-
-    if (valor.includes('bajo')) {
-        return 'badge-riesgo badge-bajo';
-    }
+    if (valor.includes('alto')) return 'badge-riesgo badge-alto';
+    if (valor.includes('medio')) return 'badge-riesgo badge-medio';
+    if (valor.includes('bajo')) return 'badge-riesgo badge-bajo';
 
     return 'badge-riesgo badge-sin-dato';
 }
@@ -80,7 +62,7 @@ function estiloParroquia(feature) {
     };
 }
 
-function contenidoHover(props) {
+function contenidoResumen(props) {
     const parroquia = limpiarTexto(props.parroquia) || 'Parroquia sin nombre';
     const canton = limpiarTexto(props.canton) || 'Sin cantón';
     const provincia = limpiarTexto(props.provincia || props.provincia_modelo) || 'Sin provincia';
@@ -97,10 +79,8 @@ function contenidoPanelClick(props) {
     const parroquia = limpiarTexto(props.parroquia) || 'Parroquia sin nombre';
     const canton = limpiarTexto(props.canton) || 'Sin cantón';
     const provincia = limpiarTexto(props.provincia || props.provincia_modelo) || 'Sin provincia';
-
     const riesgo = limpiarTexto(props.riesgo_predicho) || 'Sin dato';
     const certeza = formatoPorcentaje(props.confianza_prediccion);
-
     const anchoBarra = certeza === 'Sin dato' ? '0%' : certeza;
     const color = colorPorRiesgo(riesgo);
 
@@ -124,14 +104,12 @@ function contenidoPanelClick(props) {
     `;
 }
 
-function contenidoPopup(props) {
+function popupSimple(props) {
     const parroquia = limpiarTexto(props.parroquia) || 'Parroquia sin nombre';
     const canton = limpiarTexto(props.canton) || 'Sin cantón';
     const provincia = limpiarTexto(props.provincia || props.provincia_modelo) || 'Sin provincia';
-
     const riesgo = limpiarTexto(props.riesgo_predicho) || 'Sin dato';
     const certeza = formatoPorcentaje(props.confianza_prediccion);
-
     const anchoBarra = certeza === 'Sin dato' ? '0%' : certeza;
     const color = colorPorRiesgo(riesgo);
 
@@ -173,18 +151,19 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let capaParroquias = null;
+let parroquiaSeleccionada = false;
 
-const infoPanel = L.control({
+const infoHover = L.control({
     position: 'topright'
 });
 
-infoPanel.onAdd = function() {
+infoHover.onAdd = function() {
     this._div = L.DomUtil.create('div', 'info-hover');
     this.update();
     return this._div;
 };
 
-infoPanel.update = function(props, modo) {
+infoHover.update = function(props, modo = 'inicio') {
     if (!props) {
         this._div.innerHTML = `
             <h4>Información de Ubicación</h4>
@@ -196,22 +175,15 @@ infoPanel.update = function(props, modo) {
     if (modo === 'click') {
         this._div.innerHTML = contenidoPanelClick(props);
     } else {
-        this._div.innerHTML = contenidoHover(props);
+        this._div.innerHTML = contenidoResumen(props);
     }
 };
 
-infoPanel.addTo(map);
+infoHover.addTo(map);
 
 fetch('/api/geojson')
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        if (!data.features || data.features.length === 0) {
-            console.warn('El GeoJSON no contiene parroquias.');
-            return;
-        }
-
+    .then(response => response.json())
+    .then(data => {
         capaParroquias = L.geoJSON(data, {
             style: estiloParroquia,
             interactive: true,
@@ -221,15 +193,20 @@ fetch('/api/geojson')
 
                 layer.on({
                     mouseover: function() {
-                        infoPanel.update(props, 'hover');
+                        if (!parroquiaSeleccionada) {
+                            infoHover.update(props, 'hover');
+                        }
                     },
 
                     mouseout: function() {
-                        infoPanel.update();
+                        if (!parroquiaSeleccionada) {
+                            infoHover.update();
+                        }
                     },
 
                     click: function(e) {
-                        infoPanel.update(props, 'click');
+                        parroquiaSeleccionada = true;
+                        infoHover.update(props, 'click');
 
                         L.popup({
                             maxWidth: 330,
@@ -242,18 +219,23 @@ fetch('/api/geojson')
                             className: 'popup-leaflet-simple'
                         })
                         .setLatLng(e.latlng)
-                        .setContent(contenidoPopup(props))
+                        .setContent(popupSimple(props))
                         .openOn(map);
                     }
                 });
             }
         }).addTo(map);
 
+        map.on('popupclose', function() {
+            parroquiaSeleccionada = false;
+            infoHover.update();
+        });
+
         map.fitBounds(capaParroquias.getBounds(), {
             padding: [20, 20]
         });
     })
-    .catch(function(error) {
+    .catch(error => {
         console.error('No se pudo cargar el GeoJSON:', error);
     });
 
