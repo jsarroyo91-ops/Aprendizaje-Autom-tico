@@ -1,7 +1,6 @@
-# App Flask para Riesgo de Inundación – versión Santa Elena
+# App Flask para Riesgo de Inundación 
 
-Esta carpeta contiene la aplicación Flask actualizada con los resultados del Colab que incluye la provincia de **Santa Elena**.
-
+Esta carpeta contiene la aplicación Flask con los resultados del Colab Riesgo de Inundación
 ## Datos incluidos
 
 - Total de parroquias: **300**
